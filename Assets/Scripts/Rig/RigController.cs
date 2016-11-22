@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(RigMotor))]
 public class RigController : MonoBehaviour {
 
 	[SerializeField]
