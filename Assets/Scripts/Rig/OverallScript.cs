@@ -3,13 +3,18 @@ using System.Collections;
 using Windows.Kinect;
 
 public class OverallScript : MonoBehaviour {
+	public JointType TrackedJoint;
+
+	[SerializeField]
+	private float heightOffset = 0;
+	[SerializeField]
+	public float multiplier = 10f;
+
+
     private GameObject leftHand, rightHand, head, BodySrcManager;
-    public JointType TrackedJoint;
     private BodySourceManager bodyManager;
     private Body[] bodies;
-    public float multiplier = 10f;
-	private Vector3 LHandPos, RHandPos, HeadPos;
-
+	private Vector3 LHandPos, RHandPos, HeadPos, MShoulderPos, LShoulderPos, RShoulderPos;
     private HandState previousHandState;
     private Vector3 previousHandPosition;
     // Use this for initialization
@@ -22,6 +27,9 @@ public class OverallScript : MonoBehaviour {
 		LHandPos = new Vector3 ();
 		RHandPos = new Vector3 ();
 		HeadPos  = new Vector3 ();
+		LShoulderPos = new Vector3 ();
+		RShoulderPos = new Vector3 ();
+		MShoulderPos = new Vector3 ();
 
         previousHandState = HandState.NotTracked;
         previousHandPosition = Vector3.zero;
@@ -51,6 +59,13 @@ public class OverallScript : MonoBehaviour {
 		return HeadPos;
 	}
 
+	Vector3 getJointPos(Body body,JointType thisJoint)
+	{
+		CameraSpacePoint _thisPoint = body.Joints [thisJoint].Position;
+		Vector3 _result = new Vector3 (-_thisPoint.X, _thisPoint.Y + heightOffset, _thisPoint.Z) * multiplier;
+		return _result + transform.position;
+	}
+
     // Update is called once per frame
     void Update()
     {
@@ -71,20 +86,23 @@ public class OverallScript : MonoBehaviour {
             {
                 continue;
             }
+
             if (body.IsTracked)
             {
-				CameraSpacePoint lhpoint = body.Joints[JointType.HandLeft].Position;
-                CameraSpacePoint rhpoint = body.Joints[JointType.HandRight].Position;
-                CameraSpacePoint hpoint = body.Joints[JointType.Head].Position;
-			
-				LHandPos = new Vector3 (lhpoint.X, lhpoint.Y, lhpoint.Z) * multiplier;
-				RHandPos = new Vector3 (rhpoint.X, rhpoint.Y, rhpoint.Z) * multiplier;
-				HeadPos =  new Vector3 ( hpoint.X,  hpoint.Y,  hpoint.Z) * multiplier;
+				LHandPos = getJointPos (body, JointType.HandLeft);
+				RHandPos = getJointPos (body, JointType.HandRight);
+				HeadPos = getJointPos (body, JointType.Head);
+				LShoulderPos = getJointPos (body, JointType.ShoulderLeft);
+				RShoulderPos = getJointPos (body, JointType.ShoulderRight);
+				MShoulderPos = getJointPos (body, JointType.SpineShoulder);
+				Vector3 _camForward = Vector3.Cross (LShoulderPos - RShoulderPos, HeadPos - MShoulderPos).normalized;
 
-				if (body.HandLeftState != HandState.Lasso && body.HandRightState != HandState.Lasso) {
+				if (body.HandLeftState != HandState.Lasso && body.HandRightState != HandState.Lasso) 
+				{
 					leftHand.GetComponent<Rigidbody> ().MovePosition (LHandPos);
 					rightHand.GetComponent<Rigidbody> ().MovePosition (RHandPos);
 					head.GetComponent<Rigidbody> ().MovePosition (HeadPos);
+					head.transform.forward = _camForward;
 				}
             }
         }
