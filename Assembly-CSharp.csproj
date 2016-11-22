@@ -97,12 +97,15 @@
      <Compile Include="Assets\KinectView\Scripts\InfraredSourceManager.cs" />
      <Compile Include="Assets\KinectView\Scripts\InfraredSourceView.cs" />
      <Compile Include="Assets\KinectView\Scripts\MultiSourceManager.cs" />
+     <Compile Include="Assets\LevelManager.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\KinectController.cs" />
      <Compile Include="Assets\Scripts\KinectMessenger.cs" />
+     <Compile Include="Assets\Scripts\Level.cs" />
      <Compile Include="Assets\Scripts\MatchSettings.cs" />
      <Compile Include="Assets\Scripts\MyNetworkManager.cs" />
      <Compile Include="Assets\Scripts\NetTypeChooser.cs" />
+     <Compile Include="Assets\Scripts\PersistenceScript.cs" />
      <Compile Include="Assets\Scripts\Player\Player.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerMotor.cs" />
@@ -115,7 +118,6 @@
      <Compile Include="Assets\Scripts\Rig\RigMotor.cs" />
      <Compile Include="Assets\Scripts\Rig\RigSetup.cs" />
      <Compile Include="Assets\Scripts\Rig\RigSpawner.cs" />
-     <Compile Include="Assets\handCollideTrigger.cs" />
      <None Include="Assets\GoogleVR\Distortion\GvrDistortion.cginc" />
      <None Include="Assets\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
      <None Include="Assets\GoogleVR\Legacy\Resources\UnlitTexture.shader" />
