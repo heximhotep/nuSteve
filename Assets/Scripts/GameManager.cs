@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using AssemblyCSharp;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 
 	public static GameManager instance;
 	public MatchSettings matchSettings;
+
+	[SerializeField]
+	private LevelManager[] levels;
 
 	[SerializeField]
 	private GameObject gvrView;
@@ -58,6 +63,19 @@ public class GameManager : MonoBehaviour {
 	public static void EnableVR(Camera mainCam)
 	{
 		instance.gvrView.SetActive (true);
+	}
+
+	public static void ChangeLevel(int levelIndex)
+	{
+		LevelManager newLevel = instance.levels[levelIndex];
+		newLevel.gameObject.SetActive (true);
+		newLevel.Initialize ();
+		int playerIndex = 0;
+		foreach (KeyValuePair<string, Player> entry in players) 
+		{
+			newLevel.Spawn (entry.Value.gameObject, playerIndex);
+			playerIndex++;
+		}
 	}
 
 //	void OnGUI()
